@@ -12,6 +12,8 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
+//정적경로 설정시, 실제 경로에서 /images 경로가 생략되므로 prefix로 추가
+app.use('/images', express.static('images'));
 
 app.use(userRoutes);
 
