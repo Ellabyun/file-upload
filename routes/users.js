@@ -1,6 +1,7 @@
 const express = require('express');
-const { Db } = require('mongodb');
 const multer = require('multer');
+
+const db = require('../data/database');
 
 const storageConfig = multer.diskStorage({
   destination: function(req, file, cb){
@@ -23,13 +24,16 @@ router.get('/new-user', function(req, res) {
   res.render('new-user');
 });
 
-router.post('/profiles', upload.single('image'), function(req,res){
+router.post('/profiles', upload.single('image'), async function(req,res){
   //multer 사용할 라우터, 특정 라우터에만 적용되는 미들웨어 사용 예!
   const uploadedImageFile = req.file;
   const userData = req.body;
 
-  console.log(uploadedImageFile);
-  console.log(userData);
+  const result = await db.getDb().collection('users').insertOne({
+    name: userData.username,
+    imagePath: uploadedImageFile.path
+  })
+  console.log(result);
 
   res.redirect('/');
 })
